@@ -1,16 +1,64 @@
-# React + Vite
+# Ex2 — Application React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application React construite avec Vite, incluant des tests Jest et un pipeline CI/CD déployé sur GitHub Pages.
 
-Currently, two official plugins are available:
+## Pré-requis
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- [Node.js](https://nodejs.org/) version **20.x** ou **22.x**
+- [npm](https://www.npmjs.com/) version **9+** (inclus avec Node.js)
+- [Git](https://git-scm.com/)
 
-## React Compiler
+## Installation et lancement
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Cloner le dépôt :
 
-## Expanding the ESLint configuration
+```bash
+git clone https://github.com/FreeZe060/test_fenoll_m1_deploy.git
+cd test_fenoll_m1_deploy
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Installer les dépendances :
+
+```bash
+npm install
+```
+
+Lancer l'application en développement :
+
+```bash
+npm run dev
+```
+
+L'application est disponible sur [http://localhost:5173](http://localhost:5173).
+
+## Exécuter les tests
+
+Lancer les tests avec couverture de code :
+
+```bash
+npm test
+```
+
+Le rapport de couverture est généré dans le dossier `coverage/`.
+
+## Build de production
+
+```bash
+npm run build
+```
+
+Les fichiers compilés sont générés dans le dossier `dist/`.
+
+## Générer la documentation
+
+```bash
+npm run jsdoc
+```
+
+La documentation est générée dans le dossier `docs/`.
+
+## Déploiement
+
+Le déploiement sur GitHub Pages est automatique via GitHub Actions à chaque push sur `master`, uniquement si tous les tests passent.
+
+Application disponible sur : https://FreeZe060.github.io/test_fenoll_m1_deploy
