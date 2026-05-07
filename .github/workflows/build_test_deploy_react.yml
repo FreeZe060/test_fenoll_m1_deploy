@@ -38,6 +38,9 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Generate documentation
+        run: npm run jsdoc
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
