@@ -27,10 +27,9 @@ jobs:
         with:
           node-version: 22.x
 
-      - name: npm ci, build and test
+      - name: npm install and test
         run: |
           npm install
-          npm run build --if-present
           npm test
 
       - name: Upload coverage reports to Codecov
@@ -40,6 +39,9 @@ jobs:
 
       - name: Generate documentation
         run: npm run jsdoc
+
+      - name: Build
+        run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
