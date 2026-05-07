@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://ton-username.github.io/test_fenoll_m1_deploy",
+  "homepage": "https://FreeZe060.github.io/test_fenoll_m1_deploy",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
