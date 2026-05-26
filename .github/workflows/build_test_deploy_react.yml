@@ -78,13 +78,21 @@ jobs:
 
       - name: build and publish package on NPM
         run: |
-          git config --global user.email "loise.fenoll@ynov.com"
-          git config --global user.name "Loise Fenoll"
-          npm run build-npm
-          npm version patch
-          npm publish --access public
-          git add .
-          git commit -m "updated version"
-          git push
+          LOCAL_VERSION=$(node -p "require('./package.json').version")
+          NPM_VERSION=$(npm view @freeze06000/cicd-form-app version 2>/dev/null || echo "0.0.0")
+          echo "Local version: $LOCAL_VERSION"
+          echo "NPM version: $NPM_VERSION"
+          if [ "$LOCAL_VERSION" != "$NPM_VERSION" ]; then
+            echo "Version changed, publishing..."
+            git config --global user.email "loise.fenoll@ynov.com"
+            git config --global user.name "Loise Fenoll"
+            npm run build-npm
+            npm publish --access public
+            git add .
+            git commit -m "updated version $LOCAL_VERSION"
+            git push
+          else
+            echo "Version $LOCAL_VERSION already published on npm, skipping."
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

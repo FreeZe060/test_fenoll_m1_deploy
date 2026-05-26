@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest --coverage --collectCoverageFrom=src/**/*js[x] --collectCoverageFrom=!src/reportWebVitals.js --collectCoverageFrom=!src/index.js --collectCoverageFrom=!src/main.jsx --",
-    "build-npm": "SET NODE_ENV=production && rmdir /s /q dist & mkdir dist && npx babel src --out-dir dist --copy-files"
+    "build-npm": "SET NODE_ENV=production && rmdir /s /q dist & mkdir dist && npx babel src --out-dir dist --copy-files",
+    "jsdoc": "jsdoc -c ./jsdoc.config.json -r -d ./docs"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -46,6 +47,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
+    "jsdoc": "^4.0.5",
     "react-test-renderer": "^19.2.5",
     "vite": "^8.0.10"
   }
