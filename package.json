@@ -1,18 +1,14 @@
 {
-  "name": "ex2",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@freeze06000/cicd-form-app",
+  "version": "1.0.0",
   "type": "module",
-  "homepage": "https://FreeZe060.github.io/test_fenoll_m1_deploy",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest --coverage --collectCoverageFrom=src/**/*js[x] --collectCoverageFrom=!src/reportWebVitals.js --collectCoverageFrom=!src/index.js --collectCoverageFrom=!src/main.jsx --",
-    "jsdoc": "jsdoc -R ./README.md -c ./jsdoc.config.json -r -d ./public/docs"
+    "build-npm": "SET NODE_ENV=production && rmdir /s /q dist & mkdir dist && npx babel src --out-dir dist --copy-files"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -30,6 +26,9 @@
     "react-dom": "^19.2.5"
   },
   "devDependencies": {
+    "@babel/cli": "^7.29.7",
+    "@babel/core": "^7.29.7",
+    "@babel/plugin-transform-react-jsx": "^7.29.7",
     "@babel/preset-env": "^7.29.3",
     "@babel/preset-react": "^7.28.5",
     "@eslint/js": "^10.0.1",
@@ -43,12 +42,10 @@
     "eslint": "^10.2.1",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
-    "gh-pages": "^6.3.0",
     "globals": "^17.5.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
-    "jsdoc": "^4.0.5",
     "react-test-renderer": "^19.2.5",
     "vite": "^8.0.10"
   }

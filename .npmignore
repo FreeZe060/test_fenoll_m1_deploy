@@ -1,0 +1,9 @@
+src/
+node_modules/
+coverage/
+docs/
+.babel.config.cjs
+jest.setup.cjs
+jsdoc.config.json
+*.test.js
+*.test.jsx
