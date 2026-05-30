@@ -15,7 +15,7 @@ function calculateAge(dateNaissance) {
 }
 
 /**
- * Validates a nom or prénom (letters, hyphens, apostrophes, accents only, min 2 chars).
+ * Valide un nom ou prénom (lettres, tirets, apostrophes, accents, min 2 caractères).
  * @param {string} value
  * @returns {boolean}
  */
@@ -24,7 +24,7 @@ function isValidName(value) {
 }
 
 /**
- * Validates an email address.
+ * Valide un email.
  * @param {string} email
  * @returns {boolean}
  */
@@ -43,7 +43,7 @@ function isAdult(dateStr) {
 }
 
 /**
- * Validates a French postal code (exactly 5 digits).
+ * Valide un code postal français (5 chiffres).
  * @param {string} cp
  * @returns {boolean}
  */
@@ -52,15 +52,9 @@ function isValidCodePostal(cp) {
 }
 
 /**
- * Validates all form fields and returns an object of error messages.
+ * Valide les champs du formulaire et retourne les erreurs.
  * @param {object} formData
- * @param {string} formData.nom
- * @param {string} formData.prenom
- * @param {string} formData.mail
- * @param {string} formData.dateNaissance
- * @param {string} formData.ville
- * @param {string} formData.codePostal
- * @returns {object} errors - Empty object means no errors
+ * @returns {object}
  */
 function validateForm(formData) {
     const errors = {};

@@ -6,8 +6,7 @@ import "./App.css";
 import Form from "./Form";
 
 /**
- * Main application component.
- * Displays a hero section with a click counter and navigation links.
+ * Composant principal de l'application.
  * @component
  * @returns {JSX.Element}
  */
