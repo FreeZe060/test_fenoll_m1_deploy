@@ -1,16 +1,21 @@
 import { calculateAge, isValidName, isValidEmail, isAdult, isValidCodePostal, validateForm } from './module';
 
 test('calcul age correct', () => {
-    const age = calculateAge('1991-07-11');
-    const expected = new Date().getFullYear() - 1991;
-    expect(age === expected || age === expected - 1).toBe(true);
+    jest.useFakeTimers().setSystemTime(new Date('2026-05-30'));
+    expect(calculateAge('1991-07-11')).toBe(34);
+    jest.useRealTimers();
 });
 
 test('age 18 pile', () => {
-    const date = new Date();
-    date.setFullYear(date.getFullYear() - 18);
-    const dateStr = date.toISOString().split('T')[0];
-    expect(calculateAge(dateStr)).toBe(18);
+    jest.useFakeTimers().setSystemTime(new Date('2026-05-30'));
+    expect(calculateAge('2008-05-30')).toBe(18);
+    jest.useRealTimers();
+});
+
+test('anniversaire pas encore passé diminue age de 1', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2026-03-01'));
+    expect(calculateAge('2001-05-15')).toBe(24);
+    jest.useRealTimers();
 });
 
 describe('isAdult', () => {
