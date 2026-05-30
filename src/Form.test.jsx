@@ -38,12 +38,12 @@ describe('Form', () => {
 
     it('should show errors on empty submit', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
-        expect(screen.getByTestId('error-nom')).toBeInTheDocument();
-        expect(screen.getByTestId('error-prenom')).toBeInTheDocument();
-        expect(screen.getByTestId('error-mail')).toBeInTheDocument();
-        expect(screen.getByTestId('error-dateNaissance')).toBeInTheDocument();
-        expect(screen.getByTestId('error-ville')).toBeInTheDocument();
-        expect(screen.getByTestId('error-codePostal')).toBeInTheDocument();
+        expect(screen.getByText('Nom invalide (min. 2 lettres)')).toBeInTheDocument();
+        expect(screen.getByText('Prénom invalide (min. 2 lettres)')).toBeInTheDocument();
+        expect(screen.getByText('Email invalide')).toBeInTheDocument();
+        expect(screen.getByText('Vous devez avoir au moins 18 ans')).toBeInTheDocument();
+        expect(screen.getByText('Ville requise')).toBeInTheDocument();
+        expect(screen.getByText('Code postal invalide (5 chiffres)')).toBeInTheDocument();
     });
 
     it('should show error when under 18', () => {
@@ -51,19 +51,19 @@ describe('Form', () => {
         under18.setFullYear(under18.getFullYear() - 10);
         fillForm({ ...validData, dateNaissance: under18.toISOString().split('T')[0] });
         fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
-        expect(screen.getByTestId('error-dateNaissance')).toBeInTheDocument();
+        expect(screen.getByText('Vous devez avoir au moins 18 ans')).toBeInTheDocument();
     });
 
     it('should show error for invalid postal code', () => {
         fillForm({ ...validData, codePostal: '1234' });
         fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
-        expect(screen.getByTestId('error-codePostal')).toBeInTheDocument();
+        expect(screen.getByText('Code postal invalide (5 chiffres)')).toBeInTheDocument();
     });
 
     it('should save to localStorage and show success on valid submit', () => {
         fillForm(validData);
         fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
-        expect(screen.getByTestId('success')).toBeInTheDocument();
+        expect(screen.getByText('Inscription enregistrée !')).toBeInTheDocument();
         expect(JSON.parse(localStorage.getItem('user'))).toMatchObject(validData);
     });
 });

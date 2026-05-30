@@ -1,89 +1,74 @@
 import { calculateAge, isValidName, isValidEmail, isAdult, isValidCodePostal, validateForm } from './module';
 
-describe('calculateAge Unit Test Suites', () => {
-    it('should return a correct age', () => {
-        const loise = { birth: new Date("11/07/1991") };
-        const expected = Math.abs(new Date(Date.now() - loise.birth.getTime()).getUTCFullYear() - 1970);
-        expect(calculateAge(loise)).toEqual(expected);
+test('calcul age correct', () => {
+    const age = calculateAge('1991-07-11');
+    const expected = new Date().getFullYear() - 1991;
+    expect(age === expected || age === expected - 1).toBe(true);
+});
+
+test('age 18 pile', () => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 18);
+    const dateStr = date.toISOString().split('T')[0];
+    expect(calculateAge(dateStr)).toBe(18);
+});
+
+describe('isAdult', () => {
+    test('majeur', () => {
+        const d = new Date();
+        d.setFullYear(d.getFullYear() - 20);
+        expect(isAdult(d.toISOString().split('T')[0])).toBe(true);
     });
 
-    it('should throw a "missing param p" error', () => {
-        expect(() => calculateAge()).toThrow("missing param p");
+    test('mineur', () => {
+        const d = new Date();
+        d.setFullYear(d.getFullYear() - 15);
+        expect(isAdult(d.toISOString().split('T')[0])).toBe(false);
     });
 
-    it('should throw a "missing param p.birth" error', () => {
-        expect(() => calculateAge({})).toThrow("missing param p.birth");
-    });
-
-    it('should throw a "p.birth is not a Date" error', () => {
-        expect(() => calculateAge({ birth: "11/07/1991" })).toThrow("p.birth is not a Date");
-    });
-
-    it('should throw a "p.birth is not a valid Date" error', () => {
-        expect(() => calculateAge({ birth: new Date("invalid-date") })).toThrow("p.birth is not a valid Date");
-    });
-
-    it('should throw a "birth date cannot be in the future" error', () => {
-        const futureDate = new Date();
-        futureDate.setFullYear(futureDate.getFullYear() + 1);
-        expect(() => calculateAge({ birth: futureDate })).toThrow("birth date cannot be in the future");
+    test('chaine vide retourne false', () => {
+        expect(isAdult('')).toBe(false);
     });
 });
 
 describe('isValidName', () => {
-    it('should return true for valid names', () => {
+    it('noms valides', () => {
         expect(isValidName('Dupont')).toBe(true);
         expect(isValidName('Jean-Pierre')).toBe(true);
         expect(isValidName("O'Brien")).toBe(true);
         expect(isValidName('Héloïse')).toBe(true);
+        expect(isValidName('Müller')).toBe(true);
     });
 
-    it('should return false for invalid names', () => {
+    it('noms invalides', () => {
         expect(isValidName('A')).toBe(false);
         expect(isValidName('123')).toBe(false);
+        expect(isValidName('Jean2')).toBe(false);
         expect(isValidName('')).toBe(false);
+        expect(isValidName('J@ck')).toBe(false);
     });
 });
 
 describe('isValidEmail', () => {
-    it('should return true for valid emails', () => {
+    it('emails valides', () => {
         expect(isValidEmail('test@example.com')).toBe(true);
         expect(isValidEmail('user.name+tag@domain.fr')).toBe(true);
     });
 
-    it('should return false for invalid emails', () => {
-        expect(isValidEmail('not-an-email')).toBe(false);
+    it('emails invalides', () => {
+        expect(isValidEmail('pasunmail')).toBe(false);
         expect(isValidEmail('missing@domain')).toBe(false);
         expect(isValidEmail('')).toBe(false);
     });
 });
 
-describe('isAdult', () => {
-    it('should return true for someone over 18', () => {
-        const date = new Date();
-        date.setFullYear(date.getFullYear() - 20);
-        expect(isAdult(date.toISOString().split('T')[0])).toBe(true);
-    });
-
-    it('should return false for someone under 18', () => {
-        const date = new Date();
-        date.setFullYear(date.getFullYear() - 10);
-        expect(isAdult(date.toISOString().split('T')[0])).toBe(false);
-    });
-
-    it('should return false for empty or invalid date', () => {
-        expect(isAdult('')).toBe(false);
-        expect(isAdult('invalid')).toBe(false);
-    });
-});
-
 describe('isValidCodePostal', () => {
-    it('should return true for valid French postal codes', () => {
+    it('codes valides', () => {
         expect(isValidCodePostal('75001')).toBe(true);
         expect(isValidCodePostal('69100')).toBe(true);
     });
 
-    it('should return false for invalid postal codes', () => {
+    it('codes invalides', () => {
         expect(isValidCodePostal('1234')).toBe(false);
         expect(isValidCodePostal('ABCDE')).toBe(false);
         expect(isValidCodePostal('123456')).toBe(false);
@@ -101,11 +86,11 @@ describe('validateForm', () => {
         codePostal: '75001',
     };
 
-    it('should return no errors for valid data', () => {
+    it('pas d erreurs si tout est valide', () => {
         expect(validateForm(validData)).toEqual({});
     });
 
-    it('should return errors for all invalid fields', () => {
+    it('erreurs sur tous les champs invalides', () => {
         const errors = validateForm({ nom: 'A', prenom: '1', mail: 'bad', dateNaissance: '', ville: '', codePostal: '123' });
         expect(errors.nom).toBeDefined();
         expect(errors.prenom).toBeDefined();

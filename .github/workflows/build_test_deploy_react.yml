@@ -84,8 +84,8 @@ jobs:
           echo "NPM version: $NPM_VERSION"
           if [ "$LOCAL_VERSION" != "$NPM_VERSION" ]; then
             echo "Version changed, publishing..."
-            git config --global user.email "loise.fenoll@ynov.com"
-            git config --global user.name "Loise Fenoll"
+            git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+            git config --global user.name "${{ github.actor }}"
             npm run build-npm
             npm publish --access public
             git add .

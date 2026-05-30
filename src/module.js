@@ -1,22 +1,16 @@
 /**
- * Calculates the age of a person based on their birth date.
- * @param {object} p - An object representing a person
- * @param {Date} p.birth - The person's birth date
- * @returns {number} The age of the person in years
- * @throws {Error} If p is missing — "missing param p"
- * @throws {Error} If p.birth is missing — "missing param p.birth"
- * @throws {Error} If p.birth is not a Date instance — "p.birth is not a Date"
- * @throws {Error} If p.birth is not a valid Date — "p.birth is not a valid Date"
- * @throws {Error} If p.birth is in the future — "birth date cannot be in the future"
+ * Calcule l'âge à partir d'une date de naissance.
+ * @param {string} dateNaissance - Date au format YYYY-MM-DD
+ * @returns {number} L'âge en années
  */
-function calculateAge(p) {
-    if (!p) throw new Error("missing param p")
-    if (!p.birth) throw new Error("missing param p.birth")
-    if (!(p.birth instanceof Date)) throw new Error("p.birth is not a Date")
-    if (isNaN(p.birth)) throw new Error("p.birth is not a valid Date")
-    if (p.birth > new Date()) throw new Error("birth date cannot be in the future")
-    let dateDiff = new Date(Date.now() - p.birth.getTime())
-    let age = Math.abs(dateDiff.getUTCFullYear() - 1970)
+function calculateAge(dateNaissance) {
+    const today = new Date();
+    const birth = new Date(dateNaissance);
+    let age = today.getFullYear() - birth.getFullYear();
+    const mois = today.getMonth() - birth.getMonth();
+    if (mois < 0 || (mois === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
     return age;
 }
 
@@ -39,18 +33,13 @@ function isValidEmail(email) {
 }
 
 /**
- * Validates that the person is at least 18 years old.
- * Internally uses calculateAge — returns false if the date is invalid or in the future.
- * @param {string} dateStr - Date string in YYYY-MM-DD format
+ * Vérifie que la personne a au moins 18 ans.
+ * @param {string} dateStr - Date au format YYYY-MM-DD
  * @returns {boolean}
  */
 function isAdult(dateStr) {
     if (!dateStr) return false;
-    try {
-        return calculateAge({ birth: new Date(dateStr) }) >= 18;
-    } catch {
-        return false;
-    }
+    return calculateAge(dateStr) >= 18;
 }
 
 /**
