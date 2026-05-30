@@ -64,6 +64,11 @@ function App() {
                     <p>Your questions, answered</p>
                     <ul>
                         <li>
+                            <a href="./docs/" target="_blank">
+                                Documentation du projet
+                            </a>
+                        </li>
+                        <li>
                             <a href="https://vite.dev/" target="_blank">
                                 <img className="logo" src={viteLogo} alt="" />
                                 Explore Vite

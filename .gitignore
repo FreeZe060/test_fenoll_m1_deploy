@@ -7,7 +7,8 @@ build/
 
 # Coverage & docs générés
 coverage/
-docs/
+/docs/
+public/docs/
 
 # Fichiers de l'OS
 .DS_Store
