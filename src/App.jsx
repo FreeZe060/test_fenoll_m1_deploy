@@ -6,8 +6,7 @@ import "./App.css";
 import Form from "./Form";
 
 /**
- * Main application component.
- * Displays a hero section with a click counter and navigation links.
+ * Composant principal de l'application.
  * @component
  * @returns {JSX.Element}
  */
@@ -63,6 +62,11 @@ function App() {
                     <h2>Documentation</h2>
                     <p>Your questions, answered</p>
                     <ul>
+                        <li>
+                            <a href="./docs/" target="_blank">
+                                Documentation du projet
+                            </a>
+                        </li>
                         <li>
                             <a href="https://vite.dev/" target="_blank">
                                 <img className="logo" src={viteLogo} alt="" />

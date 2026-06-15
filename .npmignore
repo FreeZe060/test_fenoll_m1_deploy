@@ -1,9 +1,26 @@
+# Config et outils dev
+.claude/
+.github/
+.gitignore
+__mocks__/
+babel.config.cjs
+eslint.config.js
+jest.setup.cjs
+jsdoc.config.json
+vite.config.js
+mt-setting.json
+
+# Sources et tests
 src/
+public/
+index.html
+
+# Générés
 node_modules/
 coverage/
 docs/
-.babel.config.cjs
-jest.setup.cjs
-jsdoc.config.json
+public/docs/
+
+# Tests
 *.test.js
 *.test.jsx
