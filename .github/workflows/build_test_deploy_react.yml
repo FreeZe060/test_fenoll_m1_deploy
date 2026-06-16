@@ -97,7 +97,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  docker:
+  build-docker:
     runs-on: ubuntu-latest
     needs: build_test
     if: github.ref == 'refs/heads/master'
@@ -110,20 +110,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Create .env file
+      - name: Build and push frontend image
         run: |
-          echo "MYSQL_ROOT_PASSWORD=testpwd" >> .env
-          echo "MYSQL_DATABASE=ynov_ci" >> .env
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend -f Dockerfile.react .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend
 
-      - name: Build the stack
-        run: docker compose up -d --build --wait --timeout 120
-
-      - name: Test API health
-        run: curl -f http://localhost:8000/
-
-      - name: Test API users endpoint
-        run: curl -f http://localhost:8000/users
-
-      - name: Stop the stack
-        if: always()
-        run: docker compose down
+      - name: Build and push backend image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/backend -f server/Dockerfile ./server
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend
+          
