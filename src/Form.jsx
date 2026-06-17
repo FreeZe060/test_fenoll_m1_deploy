@@ -1,82 +1,89 @@
-import { useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { validateForm } from './module';
+import { useState } from "react";
 
 /**
  * Formulaire d'inscription utilisateur.
  * @component
+ * @param {Function} onSuccess - Callback appelé après inscription réussie.
  * @returns {JSX.Element}
  */
-function Form() {
-    const [formData, setFormData] = useState({
-        nom: '',
-        prenom: '',
-        mail: '',
-        dateNaissance: '',
-        ville: '',
-        codePostal: '',
-    });
-    const [errors, setErrors] = useState({});
+function Form({ onSuccess }) {
+    const [nom, setNom] = useState("");
+    const [prenom, setPrenom] = useState("");
+    const [identifiant, setIdentifiant] = useState("");
+    const [mdp, setMdp] = useState("");
+    const [message, setMessage] = useState("");
 
-    const isFormFilled = Object.values(formData).every(v => v.trim() !== '');
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
+    const isFormFilled = nom && prenom && identifiant && mdp;
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const validationErrors = validateForm(formData);
-        setErrors(validationErrors);
-        if (Object.keys(validationErrors).length === 0) {
-            localStorage.setItem('user', JSON.stringify(formData));
-            toast.success('Inscription enregistrée !');
-            setFormData({ nom: '', prenom: '', mail: '', dateNaissance: '', ville: '', codePostal: '' });
-            setErrors({});
-        } else {
-            toast.error('Veuillez corriger les erreurs du formulaire');
-        }
+        fetch("http://localhost:8000/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nom, prenom, identifiant, mdp }),
+        })
+            .then((res) => res.json())
+            .then(() => {
+                setMessage("Inscription réussie !");
+                setNom("");
+                setPrenom("");
+                setIdentifiant("");
+                setMdp("");
+                onSuccess();
+            })
+            .catch(() => setMessage("Erreur lors de l'inscription."));
     };
 
     return (
-        <>
-            <ToastContainer />
+        <div>
+            <h2>Inscription</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="nom">Nom</label>
-                    <input id="nom" name="nom" type="text" value={formData.nom} onChange={handleChange} />
-                    {errors.nom && <span style={{ color: 'red' }}>{errors.nom}</span>}
+                    <input
+                        id="nom"
+                        type="text"
+                        value={nom}
+                        onChange={(e) => setNom(e.target.value)}
+                        required
+                    />
                 </div>
                 <div>
                     <label htmlFor="prenom">Prénom</label>
-                    <input id="prenom" name="prenom" type="text" value={formData.prenom} onChange={handleChange} />
-                    {errors.prenom && <span style={{ color: 'red' }}>{errors.prenom}</span>}
+                    <input
+                        id="prenom"
+                        type="text"
+                        value={prenom}
+                        onChange={(e) => setPrenom(e.target.value)}
+                        required
+                    />
                 </div>
                 <div>
-                    <label htmlFor="mail">Mail</label>
-                    <input id="mail" name="mail" type="text" value={formData.mail} onChange={handleChange} />
-                    {errors.mail && <span style={{ color: 'red' }}>{errors.mail}</span>}
+                    <label htmlFor="identifiant">Identifiant</label>
+                    <input
+                        id="identifiant"
+                        type="text"
+                        value={identifiant}
+                        onChange={(e) => setIdentifiant(e.target.value)}
+                        required
+                    />
                 </div>
                 <div>
-                    <label htmlFor="dateNaissance">Date de naissance</label>
-                    <input id="dateNaissance" name="dateNaissance" type="date" value={formData.dateNaissance} onChange={handleChange} />
-                    {errors.dateNaissance && <span style={{ color: 'red' }}>{errors.dateNaissance}</span>}
+                    <label htmlFor="mdp">Mot de passe</label>
+                    <input
+                        id="mdp"
+                        type="password"
+                        value={mdp}
+                        onChange={(e) => setMdp(e.target.value)}
+                        required
+                    />
                 </div>
-                <div>
-                    <label htmlFor="ville">Ville</label>
-                    <input id="ville" name="ville" type="text" value={formData.ville} onChange={handleChange} />
-                    {errors.ville && <span style={{ color: 'red' }}>{errors.ville}</span>}
-                </div>
-                <div>
-                    <label htmlFor="codePostal">Code postal</label>
-                    <input id="codePostal" name="codePostal" type="text" value={formData.codePostal} onChange={handleChange} />
-                    {errors.codePostal && <span style={{ color: 'red' }}>{errors.codePostal}</span>}
-                </div>
-                <button type="submit" disabled={!isFormFilled}>Enregistrer</button>
+                <button type="submit" disabled={!isFormFilled}>
+                    {"S'inscrire"}
+                </button>
             </form>
-        </>
+            {message && <p>{message}</p>}
+        </div>
     );
 }
 

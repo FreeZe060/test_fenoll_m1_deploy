@@ -3,14 +3,26 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
 
 describe('App', () => {
-    test('check counter on click me button', () => {
+    beforeEach(() => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({ json: () => Promise.resolve([]) })
+        );
+    });
+
+    it('affiche les boutons de navigation', () => {
         render(<App />);
-        const button = screen.getByRole('button', { name: /click me/i });
-        const counter = screen.getByTestId('count');
-        expect(button).toBeInTheDocument();
-        expect(counter).toBeInTheDocument();
-        expect(counter).toHaveTextContent("0");
-        fireEvent.click(button);
-        expect(counter).toHaveTextContent("1");
+        expect(screen.getByRole('button', { name: /inscription/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /utilisateurs/i })).toBeInTheDocument();
+    });
+
+    it('affiche le formulaire par défaut', () => {
+        render(<App />);
+        expect(screen.getByLabelText('Nom')).toBeInTheDocument();
+    });
+
+    it('bascule vers la liste en cliquant Utilisateurs', () => {
+        render(<App />);
+        fireEvent.click(screen.getByRole('button', { name: /utilisateurs/i }));
+        expect(screen.getByText(/liste des utilisateurs/i)).toBeInTheDocument();
     });
 });
