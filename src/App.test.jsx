@@ -11,7 +11,7 @@ describe('App', () => {
 
     it('affiche les boutons de navigation', () => {
         render(<App />);
-        expect(screen.getByRole('button', { name: /inscription/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /connexion/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /utilisateurs/i })).toBeInTheDocument();
     });
 

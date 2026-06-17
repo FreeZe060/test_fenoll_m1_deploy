@@ -1,29 +1,12 @@
-import { useState } from "react";
-
-const ADMIN_PASSWORD = "admin";
-
 /**
- * Liste des utilisateurs avec mode admin.
+ * Liste des utilisateurs.
  * @component
  * @param {Array} users - Liste des utilisateurs.
+ * @param {boolean} isAdmin - Indique si l'utilisateur connecté est admin.
  * @param {Function} onDelete - Callback après suppression.
  * @returns {JSX.Element}
  */
-function UserList({ users, onDelete }) {
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [adminInput, setAdminInput] = useState("");
-    const [showLogin, setShowLogin] = useState(false);
-
-    const handleAdminLogin = () => {
-        if (adminInput === ADMIN_PASSWORD) {
-            setIsAdmin(true);
-            setShowLogin(false);
-            setAdminInput("");
-        } else {
-            alert("Mot de passe incorrect");
-        }
-    };
-
+function UserList({ users, isAdmin, onDelete }) {
     const handleDelete = (id) => {
         fetch(`http://localhost:8000/users/${id}`, { method: "DELETE" })
             .then(() => onDelete());
@@ -32,31 +15,6 @@ function UserList({ users, onDelete }) {
     return (
         <div>
             <h2>Liste des utilisateurs ({users.length})</h2>
-
-            {!isAdmin && (
-                <button onClick={() => setShowLogin(!showLogin)}>
-                    Mode Admin
-                </button>
-            )}
-
-            {showLogin && !isAdmin && (
-                <div>
-                    <input
-                        type="password"
-                        placeholder="Mot de passe admin"
-                        value={adminInput}
-                        onChange={(e) => setAdminInput(e.target.value)}
-                    />
-                    <button onClick={handleAdminLogin}>Connexion</button>
-                </div>
-            )}
-
-            {isAdmin && (
-                <span>
-                    Mode admin actif —{" "}
-                    <button onClick={() => setIsAdmin(false)}>Déconnexion</button>
-                </span>
-            )}
 
             <table>
                 <thead>
