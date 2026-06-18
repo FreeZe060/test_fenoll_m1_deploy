@@ -131,6 +131,8 @@ jobs:
         run: |
           echo "MYSQL_ROOT_PASSWORD=testpwd" >> .env
           echo "MYSQL_DATABASE=ynov_ci" >> .env
+          echo "ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}" >> .env
+          echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
 
       - name: Start the stack
         run: docker compose up -d --build

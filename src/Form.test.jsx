@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import Form from './Form';
 
 const mockUser = { id: 3, nom: 'Admin', prenom: 'System', identifiant: 'admin', is_admin: true };
@@ -41,5 +41,17 @@ describe('Form', () => {
             'http://localhost:8000/login',
             expect.objectContaining({ method: 'POST' })
         );
+    });
+
+    it('affiche un message d erreur si identifiant ou mot de passe incorrect', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({ ok: false, json: () => Promise.resolve({}) })
+        );
+        fireEvent.change(screen.getByLabelText('Identifiant'), { target: { value: 'wrong' } });
+        fireEvent.change(screen.getByLabelText('Mot de passe'), { target: { value: 'wrong' } });
+        await act(async () => {
+            fireEvent.click(screen.getByRole('button', { name: 'Se connecter' }));
+        });
+        expect(screen.getByText('Identifiant ou mot de passe incorrect')).toBeInTheDocument();
     });
 });

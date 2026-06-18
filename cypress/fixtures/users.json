@@ -2,11 +2,17 @@
   {
     "id": 1,
     "nom": "Doe",
-    "prenom": "John"
+    "prenom": "John",
+    "email": null,
+    "identifiant": "jdoe",
+    "is_admin": false
   },
   {
     "id": 2,
-    "nom": "User",
-    "prenom": "Test"
+    "nom": "Fenoll",
+    "prenom": "Loise",
+    "email": "loise.fenoll@ynov.com",
+    "identifiant": "loise.fenoll@ynov.com",
+    "is_admin": true
   }
 ]
