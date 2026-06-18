@@ -141,7 +141,7 @@ jobs:
         run: docker ps
 
       - name: Wait for services to be healthy
-        run: sleep 90
+        run: sleep 15
 
       - name: Check db health
         run: |
@@ -189,7 +189,7 @@ jobs:
         run: docker compose up -d --build
 
       - name: Wait for services to be healthy
-        run: sleep 90
+        run: sleep 15
 
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v6

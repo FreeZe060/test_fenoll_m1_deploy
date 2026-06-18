@@ -31,7 +31,7 @@ function Form({ onLogin }) {
                 setMdp("");
                 onLogin(user);
             })
-            .catch((err) => setError(err.message));
+            .catch(() => setError("Identifiant ou mot de passe incorrect"));
     };
 
     return (
