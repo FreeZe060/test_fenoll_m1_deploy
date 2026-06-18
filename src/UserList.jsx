@@ -22,6 +22,7 @@ function UserList({ users, isAdmin, onDelete }) {
                         <th>Nom</th>
                         <th>Prénom</th>
                         {isAdmin && <th>Identifiant</th>}
+                        {isAdmin && <th>Email</th>}
                         {isAdmin && <th>Actions</th>}
                     </tr>
                 </thead>
@@ -31,6 +32,7 @@ function UserList({ users, isAdmin, onDelete }) {
                             <td>{user.nom}</td>
                             <td>{user.prenom}</td>
                             {isAdmin && <td>{user.identifiant}</td>}
+                            {isAdmin && <td>{user.email ?? "—"}</td>}
                             {isAdmin && (
                                 <td>
                                     <button onClick={() => handleDelete(user.id)}>

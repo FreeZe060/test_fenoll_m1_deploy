@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import mysql.connector
@@ -16,6 +16,10 @@ app.add_middleware(
 class UserCreate(BaseModel):
     nom: str
     prenom: str
+    identifiant: str
+    mdp: str
+
+class LoginCredentials(BaseModel):
     identifiant: str
     mdp: str
 
@@ -53,6 +57,21 @@ def create_user(user: UserCreate):
     cursor.close()
     conn.close()
     return {"message": "User created"}
+
+@app.post("/login")
+def login(credentials: LoginCredentials):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute(
+        "SELECT * FROM utilisateur WHERE identifiant = %s AND mdp = %s",
+        (credentials.identifiant, credentials.mdp)
+    )
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    if not user:
+        raise HTTPException(status_code=401, detail="Identifiant ou mot de passe incorrect")
+    return user
 
 @app.delete("/users/{user_id}")
 def delete_user(user_id: int):

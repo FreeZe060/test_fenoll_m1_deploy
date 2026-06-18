@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Form from "./Form";
 import UserList from "./UserList";
+import "./App.css";
 
 /**
  * Composant principal de l'application.
@@ -8,9 +9,20 @@ import UserList from "./UserList";
  * @returns {JSX.Element}
  */
 function App() {
-    const [view, setView] = useState("form");
     const [users, setUsers] = useState([]);
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [showLoginForm, setShowLoginForm] = useState(false);
+
+    const isAdmin = !!currentUser?.is_admin;
+
+    const handleLogin = (user) => {
+        setCurrentUser(user);
+        setShowLoginForm(false);
+    };
+
+    const handleLogout = () => {
+        setCurrentUser(null);
+    };
 
     const fetchUsers = () => {
         fetch("http://localhost:8000/users")
@@ -26,14 +38,25 @@ function App() {
     return (
         <div>
             <nav>
-                <button onClick={() => setView("form")}>Connexion</button>
-                <button onClick={() => setView("list")}>
-                    Utilisateurs ({users.length})
-                </button>
+                {!currentUser && (
+                    <button onClick={() => setShowLoginForm(true)}>Connexion</button>
+                )}
+                {currentUser && (
+                    <>
+                        <span>Connecté : {currentUser.prenom} {currentUser.nom}</span>
+                        <button onClick={handleLogout}>Déconnexion</button>
+                    </>
+                )}
             </nav>
-            <p>{users.length} user(s) already registered</p>
-            {view === "form" && <Form onSuccess={fetchUsers} />}
-            {view === "list" && <UserList users={users} isAdmin={isAdmin} onDelete={fetchUsers} />}
+            <UserList users={users} isAdmin={isAdmin} onDelete={fetchUsers} />
+            {showLoginForm && (
+                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setShowLoginForm(false)}>
+                    <div className="modal-box">
+                        <button className="modal-close" onClick={() => setShowLoginForm(false)}>✕</button>
+                        <Form onLogin={handleLogin} />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

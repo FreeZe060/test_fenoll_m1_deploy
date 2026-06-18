@@ -1,64 +1,44 @@
 import { useState } from "react";
+import "./Form.css";
 
 /**
- * Formulaire d'inscription utilisateur.
+ * Formulaire de connexion utilisateur.
  * @component
- * @param {Function} onSuccess - Callback appelé après inscription réussie.
+ * @param {Function} onLogin - Callback appelé avec l'utilisateur connecté.
  * @returns {JSX.Element}
  */
-function Form({ onSuccess }) {
-    const [nom, setNom] = useState("");
-    const [prenom, setPrenom] = useState("");
+function Form({ onLogin }) {
     const [identifiant, setIdentifiant] = useState("");
     const [mdp, setMdp] = useState("");
-    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
 
-    const isFormFilled = nom && prenom && identifiant && mdp;
+    const isFormFilled = identifiant && mdp;
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch("http://localhost:8000/users", {
+        setError("");
+        fetch("http://localhost:8000/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ nom, prenom, identifiant, mdp }),
+            body: JSON.stringify({ identifiant, mdp }),
         })
-            .then((res) => res.json())
-            .then(() => {
-                setMessage("Inscription réussie !");
-                setNom("");
-                setPrenom("");
+            .then((res) => {
+                if (!res.ok) throw new Error("Identifiant ou mot de passe incorrect");
+                return res.json();
+            })
+            .then((user) => {
                 setIdentifiant("");
                 setMdp("");
-                onSuccess();
+                onLogin(user);
             })
-            .catch(() => setMessage("Erreur lors de l'inscription."));
+            .catch((err) => setError(err.message));
     };
 
     return (
-        <div>
-            <h2>Inscription</h2>
+        <div className="login-form">
+            <h2>Connexion</h2>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="nom">Nom</label>
-                    <input
-                        id="nom"
-                        type="text"
-                        value={nom}
-                        onChange={(e) => setNom(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="prenom">Prénom</label>
-                    <input
-                        id="prenom"
-                        type="text"
-                        value={prenom}
-                        onChange={(e) => setPrenom(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="identifiant">Identifiant</label>
                     <input
                         id="identifiant"
@@ -68,7 +48,7 @@ function Form({ onSuccess }) {
                         required
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="mdp">Mot de passe</label>
                     <input
                         id="mdp"
@@ -78,11 +58,11 @@ function Form({ onSuccess }) {
                         required
                     />
                 </div>
-                <button type="submit" disabled={!isFormFilled}>
-                    {"S'inscrire"}
+                <button type="submit" className="btn-login" disabled={!isFormFilled}>
+                    Se connecter
                 </button>
             </form>
-            {message && <p>{message}</p>}
+            {error && <p className="form-error">{error}</p>}
         </div>
     );
 }
