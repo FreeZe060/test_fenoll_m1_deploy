@@ -46,12 +46,29 @@ class LoginCredentials(BaseModel):
     mdp: str
 
 def get_connection():
-    return mysql.connector.connect(
+    kwargs = dict(
         host=os.getenv("DB_HOST", "db"),
+        port=int(os.getenv("DB_PORT", 3306)),
         user=os.getenv("DB_USER", "root"),
         password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME", "ynov_ci")
+        database=os.getenv("DB_NAME", "ynov_ci"),
     )
+    ssl_ca_content = os.getenv("DB_SSL_CA_CONTENT")
+    ssl_ca_path = os.getenv("DB_SSL_CA")
+    if ssl_ca_content:
+        import tempfile
+        tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".pem", mode="w")
+        tmp.write(ssl_ca_content)
+        tmp.close()
+        kwargs["ssl_ca"] = tmp.name
+        kwargs["ssl_verify_cert"] = True
+    elif ssl_ca_path:
+        kwargs["ssl_ca"] = ssl_ca_path
+        kwargs["ssl_verify_cert"] = True
+    elif os.getenv("DB_HOST", "db") != "db":
+        kwargs["ssl_verify_cert"] = False
+        kwargs["ssl_verify_identity"] = False
+    return mysql.connector.connect(**kwargs)
 
 @app.get("/")
 def read_root():

@@ -10,12 +10,19 @@ coverage/
 /docs/
 public/docs/
 
+# Python
+__pycache__/
+*.pyc
+
 # Fichiers de l'OS
 .DS_Store
 Thumbs.db
 
 # Variables d'environnement
 .env
+
+# Certificat SSL Aiven
+server/ca.pem
 .env.local
 .env.*.local
 
