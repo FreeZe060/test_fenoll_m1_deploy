@@ -1,5 +1,7 @@
 import { useState } from "react";
+import axios from "axios";
 import "./Form.css";
+import { API_URL } from "./config";
 
 /**
  * Formulaire de connexion utilisateur.
@@ -17,19 +19,11 @@ function Form({ onLogin }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         setError("");
-        fetch("http://localhost:8000/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ identifiant, mdp }),
-        })
+        axios.post(`${API_URL}/login`, { identifiant, mdp })
             .then((res) => {
-                if (!res.ok) throw new Error("Identifiant ou mot de passe incorrect");
-                return res.json();
-            })
-            .then((user) => {
                 setIdentifiant("");
                 setMdp("");
-                onLogin(user);
+                onLogin(res.data);
             })
             .catch(() => setError("Identifiant ou mot de passe incorrect"));
     };

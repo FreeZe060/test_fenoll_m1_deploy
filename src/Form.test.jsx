@@ -1,17 +1,15 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, act } from '@testing-library/react';
+import axios from 'axios';
 import Form from './Form';
+
+jest.mock('axios');
 
 const mockUser = { id: 3, nom: 'Admin', prenom: 'System', identifiant: 'admin', is_admin: true };
 
 describe('Form', () => {
     beforeEach(() => {
-        global.fetch = jest.fn(() =>
-            Promise.resolve({
-                ok: true,
-                json: () => Promise.resolve(mockUser),
-            })
-        );
+        axios.post.mockResolvedValue({ data: mockUser });
         render(<Form onLogin={() => {}} />);
     });
 
@@ -37,16 +35,14 @@ describe('Form', () => {
         fireEvent.change(screen.getByLabelText('Identifiant'), { target: { value: 'admin' } });
         fireEvent.change(screen.getByLabelText('Mot de passe'), { target: { value: 'admin' } });
         fireEvent.click(screen.getByRole('button', { name: 'Se connecter' }));
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(axios.post).toHaveBeenCalledWith(
             'http://localhost:8000/login',
-            expect.objectContaining({ method: 'POST' })
+            { identifiant: 'admin', mdp: 'admin' }
         );
     });
 
     it('affiche un message d erreur si identifiant ou mot de passe incorrect', async () => {
-        global.fetch = jest.fn(() =>
-            Promise.resolve({ ok: false, json: () => Promise.resolve({}) })
-        );
+        axios.post.mockRejectedValue(new Error('Unauthorized'));
         fireEvent.change(screen.getByLabelText('Identifiant'), { target: { value: 'wrong' } });
         fireEvent.change(screen.getByLabelText('Mot de passe'), { target: { value: 'wrong' } });
         await act(async () => {

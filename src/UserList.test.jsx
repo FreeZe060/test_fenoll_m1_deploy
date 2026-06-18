@@ -1,6 +1,9 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
+import axios from 'axios';
 import UserList from './UserList';
+
+jest.mock('axios');
 
 const mockUsers = [
     { id: 1, nom: 'Doe', prenom: 'John', identifiant: 'jdoe' },
@@ -9,7 +12,7 @@ const mockUsers = [
 
 describe('UserList', () => {
     beforeEach(() => {
-        global.fetch = jest.fn(() => Promise.resolve({ json: () => Promise.resolve({}) }));
+        axios.delete.mockResolvedValue({});
     });
 
     it('affiche le nombre d utilisateurs', () => {
@@ -38,13 +41,10 @@ describe('UserList', () => {
         expect(screen.getAllByRole('button', { name: 'Supprimer' })).toHaveLength(2);
     });
 
-    it('appelle fetch DELETE et onDelete au clic supprimer', () => {
+    it('appelle axios.delete et onDelete au clic supprimer', () => {
         const onDelete = jest.fn();
         render(<UserList users={mockUsers} isAdmin={true} onDelete={onDelete} />);
         fireEvent.click(screen.getAllByRole('button', { name: 'Supprimer' })[0]);
-        expect(global.fetch).toHaveBeenCalledWith(
-            'http://localhost:8000/users/1',
-            { method: 'DELETE' }
-        );
+        expect(axios.delete).toHaveBeenCalledWith('http://localhost:8000/users/1');
     });
 });

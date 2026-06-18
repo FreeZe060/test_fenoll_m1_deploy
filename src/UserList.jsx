@@ -1,3 +1,5 @@
+import axios from "axios";
+import { API_URL } from "./config";
 /**
  * Liste des utilisateurs.
  * @component
@@ -8,7 +10,7 @@
  */
 function UserList({ users, isAdmin, onDelete }) {
     const handleDelete = (id) => {
-        fetch(`http://localhost:8000/users/${id}`, { method: "DELETE" })
+        axios.delete(`${API_URL}/users/${id}`)
             .then(() => onDelete());
     };
 

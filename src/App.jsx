@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import Form from "./Form";
 import UserList from "./UserList";
 import "./App.css";
+import { API_URL } from "./config";
 
 /**
  * Composant principal de l'application.
@@ -25,9 +27,8 @@ function App() {
     };
 
     const fetchUsers = () => {
-        fetch("http://localhost:8000/users")
-            .then((res) => res.json())
-            .then((data) => setUsers(data))
+        axios.get(`${API_URL}/users`)
+            .then((res) => setUsers(res.data))
             .catch(() => setUsers([]));
     };
 

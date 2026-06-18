@@ -1,6 +1,9 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, act } from '@testing-library/react';
+import axios from 'axios';
 import App from './App';
+
+jest.mock('axios');
 
 const mockUser = { id: 3, nom: 'Admin', prenom: 'System', identifiant: 'admin', is_admin: true };
 
@@ -19,12 +22,8 @@ async function loginAs(user = { identifiant: 'admin', mdp: 'admin' }) {
 
 describe('App', () => {
     beforeEach(() => {
-        global.fetch = jest.fn((url) => {
-            if (url.includes('/login')) {
-                return Promise.resolve({ ok: true, json: () => Promise.resolve(mockUser) });
-            }
-            return Promise.resolve({ json: () => Promise.resolve([]) });
-        });
+        axios.get.mockResolvedValue({ data: [] });
+        axios.post.mockResolvedValue({ data: mockUser });
     });
 
     it('affiche le bouton connexion par défaut', async () => {
@@ -87,7 +86,7 @@ describe('App', () => {
     });
 
     it('gère l erreur de chargement des utilisateurs', async () => {
-        global.fetch = jest.fn(() => Promise.reject(new Error('Network error')));
+        axios.get.mockRejectedValue(new Error('Network error'));
         await renderApp();
         expect(screen.getByRole('table')).toBeInTheDocument();
     });
