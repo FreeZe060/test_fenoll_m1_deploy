@@ -110,3 +110,46 @@ describe('Vue admin', () => {
     cy.contains('th', 'Identifiant').should('not.exist')
   })
 })
+
+describe('Tests en mode Offline', () => {
+  beforeEach(() => {
+    cy.intercept('GET', 'http://localhost:8000/users', { fixture: 'users.json' })
+    cy.visit('/')
+    cy.contains('button', 'Connexion').click()
+  })
+
+  it('devrait se comporter correctement en ligne', function () {
+    if (Cypress.env('offline')) {
+      this.skip()
+    }
+
+    cy.intercept('POST', 'http://localhost:8000/login', {
+      statusCode: 200,
+      body: { id: 1, nom: 'Admin', prenom: 'System', identifiant: 'admin', is_admin: true },
+    }).as('loginRequest')
+
+    cy.get('#identifiant').type('admin')
+    cy.get('#mdp').type('admin')
+    cy.contains('button', 'Se connecter').click()
+    cy.wait('@loginRequest').then((interception) => {
+      expect(interception.response.statusCode).to.equal(200)
+    })
+    cy.contains('button', 'Déconnexion').should('be.visible')
+  })
+
+  it('devrait afficher un message d\'erreur quand le réseau est coupé', function () {
+    if (!Cypress.env('offline')) {
+      this.skip()
+    }
+
+    cy.log('Mode offline activé !')
+
+    cy.intercept('POST', 'http://localhost:8000/login', { forceNetworkError: true }).as('loginRequest')
+
+    cy.get('#identifiant').type('admin')
+    cy.get('#mdp').type('admin')
+    cy.contains('button', 'Se connecter').click()
+
+    cy.contains('Identifiant ou mot de passe incorrect').should('be.visible')
+  })
+})

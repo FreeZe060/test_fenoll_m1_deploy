@@ -6,6 +6,28 @@ import os
 
 app = FastAPI()
 
+
+@app.on_event("startup")
+def seed_admin():
+    admin_email = os.getenv("ADMIN_EMAIL")
+    admin_password = os.getenv("ADMIN_PASSWORD")
+    if not admin_email or not admin_password:
+        return
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM utilisateur WHERE identifiant = %s", (admin_email,))
+        if not cursor.fetchone():
+            cursor.execute(
+                "INSERT INTO utilisateur (nom, prenom, email, identifiant, mdp, is_admin) VALUES (%s, %s, %s, %s, %s, TRUE)",
+                ("Fenoll", "Loise", admin_email, admin_email, admin_password),
+            )
+            conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception:
+        pass
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

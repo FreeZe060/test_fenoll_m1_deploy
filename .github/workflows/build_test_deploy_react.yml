@@ -196,6 +196,13 @@ jobs:
         with:
           install: false
 
+      - name: Run Cypress tests (Offline mode)
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+        env:
+          CYPRESS_offline: true
+
       - name: Stop the stack
         if: always()
         run: docker compose down
