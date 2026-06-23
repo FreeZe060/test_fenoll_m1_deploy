@@ -33,3 +33,12 @@ cypress/videos/
 # Logs
 *.log
 npm-debug.log*
+key.txt
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+*.pem
+registry/registry-key-terraform.pem
