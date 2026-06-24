@@ -35,10 +35,12 @@ cypress/videos/
 npm-debug.log*
 key.txt
 
-# Terraform
+# Terraform - secrets et binaires (ne pas pousser)
 **/.terraform/
 *.tfstate
 *.tfstate.backup
 *.tfstate.lock.info
 *.pem
-registry/registry-key-terraform.pem
+
+# Terraform - fichiers sources à pousser (main.tf, deploy.yml, etc.)
+# Ces fichiers NE sont PAS ignorés

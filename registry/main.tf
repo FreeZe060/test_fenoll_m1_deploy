@@ -42,6 +42,10 @@ resource "aws_security_group" "registry_sg" {
   name        = "registry-sg-secure"
   description = "Allow SSH and HTTPS for Docker Registry"
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   ingress {
     description = "SSH"
     from_port   = 22
