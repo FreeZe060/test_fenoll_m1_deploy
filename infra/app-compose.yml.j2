@@ -29,6 +29,7 @@ services:
       MYSQL_DATABASE: ynov_ci
     volumes:
       - db_data:/var/lib/mysql
+      - ./sqlfiles:/docker-entrypoint-initdb.d
 
   adminer:
     image: adminer

@@ -1,11 +1,14 @@
 ---
-- name: Deploiement Stack Applicative
-  hosts: app_hosts
+- name: Installation Docker sur EC2
+  hosts: all
   become: true
-  vars:
-    project_dir: "/home/ubuntu/app"
 
   tasks:
+    - name: Attente connexion SSH disponible
+      wait_for_connection:
+        delay: 5
+        timeout: 60
+
     - name: Installation Docker et docker-compose
       apt:
         update_cache: yes
@@ -24,66 +27,18 @@
       copy:
         dest: /etc/docker/daemon.json
         content: |
-          {
-            "insecure-registries": ["{{ registry_ip }}:443"]
-          }
+          {"insecure-registries": ["{{ registry_ip }}:443"]}
       notify: Restart Docker
 
-    - name: Flush handlers pour restart Docker
-      meta: flush_handlers
-
-    - name: Creation dossier app
-      file:
-        path: "{{ project_dir }}"
-        state: directory
-        owner: ubuntu
-        group: ubuntu
-        mode: '0755'
-
-    - name: Login au registre Docker prive
-      command: docker login {{ registry_ip }}:443 -u {{ registry_user }} -p {{ registry_password }}
-      become_user: ubuntu
-
-    - name: Copie du docker-compose
-      template:
-        src: app-compose.yml.j2
-        dest: "{{ project_dir }}/docker-compose.yml"
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
-
-    - name: Pull des images depuis le registre
-      command: docker compose pull
-      args:
-        chdir: "{{ project_dir }}"
-      become_user: ubuntu
-
-    - name: Stop stack existante
-      command: docker compose down
-      args:
-        chdir: "{{ project_dir }}"
-      ignore_errors: yes
-      become_user: ubuntu
-
-    - name: Demarrage de la stack
-      command: docker compose up -d
-      args:
-        chdir: "{{ project_dir }}"
-      become_user: ubuntu
-
-    - name: Statut des conteneurs
-      command: docker compose ps
-      args:
-        chdir: "{{ project_dir }}"
-      become_user: ubuntu
-      register: compose_output
-
-    - name: Affichage statut
-      debug:
-        msg: "{{ compose_output.stdout_lines }}"
+    - name: Demarrage Docker
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
 
   handlers:
     - name: Restart Docker
       systemd:
         name: docker
         state: restarted
+        enabled: yes

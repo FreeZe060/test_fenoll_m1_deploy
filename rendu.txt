@@ -1,0 +1,50 @@
+=====================================================
+RENDU - Projet Final CI/CD Zero Touch
+Groupe : Tim / Alexandre
+=====================================================
+
+REPARTITION DU TRAVAIL :
+Une grande partie du projet a ete realisee en collaboration active
+via VS Code Live Share, ce qui nous a permis de travailler
+simultanement sur les memes fichiers en temps reel.
+
+Tim (Membre A - Infrastructure as Code & Pipeline CI/CD) :
+  - Provisionnement Terraform : EC2 registre + EC2 applicative
+  - Configuration securite AWS : security groups, cles SSH volatiles
+  - AMI dynamique (data source Ubuntu 24.04)
+  - Outputs Terraform (IP publique, cle privee)
+  - Workflow GitHub Actions deploy.yml (orchestration complete)
+  - Bridge Terraform -> Ansible (generation inventory.ini dynamique)
+  - Etapes de validation post-deploiement (curl frontend + backend)
+
+Alexandre (Membre B - Configuration Management & Docker) :
+  - Playbooks Ansible : deploiement registre Docker prive
+  - Configuration Nginx reverse proxy SSL + certificats auto-signes
+  - Authentification htpasswd sur le registre
+  - Playbook applicatif : Docker, docker login, stack compose
+  - Build et push des images Docker vers le registre prive
+=====================================================
+
+REPOSITORY GITHUB :
+https://github.com/FreeZe060/test_fenoll_m1_deploy
+
+-----------------------------------------------------
+EC2 REGISTRE DOCKER PRIVE :
+IP publique              : 15.224.107.173
+URL registre interface   : https://15.224.107.173:443
+Login                    : admin
+Mot de passe             : admin123
+
+-----------------------------------------------------
+EC2 APPLICATION :
+IP publique     : 51.44.20.221
+Frontend        : http://51.44.20.221:80
+Backend API     : http://51.44.20.221:8000
+Adminer         : http://51.44.20.221:8080
+
+-----------------------------------------------------
+WORKFLOW CI/CD :
+Declenchement   : Manuel (workflow_dispatch)
+Fichier         : .github/workflows/deploy.yml
+Branche         : master
+=====================================================
