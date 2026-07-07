@@ -74,7 +74,7 @@ jobs:
       - name: Demarrage stack via SSH
         run: |
           ssh -i /tmp/app-key.pem ubuntu@${{ secrets.EC2_HOST }} \
-            "docker login ${{ env.REGISTRY }} -u ${{ secrets.REGISTRY_USER }} -p '${{ secrets.REGISTRY_PASSWORD }}' && \
+            "sudo docker login ${{ env.REGISTRY }} -u ${{ secrets.REGISTRY_USER }} -p '${{ secrets.REGISTRY_PASSWORD }}' && \
              cd /home/ubuntu && \
              sudo docker compose pull && \
              sudo docker compose down && \
